@@ -1,12 +1,15 @@
-//import { search } from "./api/searchApi";
+import { search } from "./api/searchApi";
+import React, { useState, useEffect } from 'react'
+import {DebounceInput} from 'react-debounce-input';
+import * as R from 'ramda';
 
 //
-// TODO: implement search
+// TODO: implement search [x]
 //
 // Use the search function exported from the searchApi to take input
 // and display search results.
 //
-// TODO:  implement orientation
+// TODO:  implement orientation [x]
 //
 // change the layout of the search component based on the orientation prop
 //
@@ -19,12 +22,24 @@
 //      results
 //
 export const Search = ({ orientation = ORIENTATION.VERTICAL }) => {
+  const [inputValue, setInput] = useState('');
+  const [resultsData, setResultsData] = useState([]);
+
+  useEffect(() => {
+    setResultsData(search(inputValue));
+  }, [inputValue])
+
   return (
+    <>
     <div className="search">
       <label id="searchLabel">Country Search</label>
-      <input aria-labelledby="searchLabel" name="searchInput" type="text" />
-      <ResultList resultData={[]} />
+       <DebounceInput
+        minLength={1}
+        debounceTimeout={300}
+        onChange={event => setInput(event.target.value)} />
     </div>
+    <ResultList orientation={orientation} resultData={resultsData} />
+    </>
   );
 };
 export const ORIENTATION = {
@@ -43,15 +58,16 @@ export const ORIENTATION = {
 //
 const Result = ({ data }) => {
   return (
-    <div className="result">
+    <div className="result" key={data.code}>
       <span className="resultName">{data.name}</span>
       <span className="resultCode">{data.code}</span>
     </div>
   );
 };
 
-// TODO: implement the ResultList using the Result component above
-//
-const ResultList = ({ resultData = [] }) => {
-  return <div className="results">{/* render the result data here */}</div>;
+const ResultList = ({ resultData = [], orientation }) => {
+  const display = (orientation === ORIENTATION.VERTICAL) ? 'vertical-results' : 'results';
+  return <div className={display}>
+    { R.map((country) => <Result key={country.code} data={country}/>, resultData)}
+    </div>;
 };

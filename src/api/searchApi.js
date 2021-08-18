@@ -1,11 +1,12 @@
 import { countries } from "./data";
-
+import * as R from 'ramda';
+ 
 // TODO: implement country search!
 //
 // This function should implement a search simple function that accepts input and returns matching results.
 //
 // Requirements:
-// - string input should return all countries with a name or code match
+// - string input should return all countries with a name or code match [x]
 //
 // - "Gambia" should return:
 //   [{name: 'Gambia', code: 'GM'}]
@@ -38,5 +39,15 @@ import { countries } from "./data";
 // - see the searchApi.test.js file for unit tests
 //
 export const search = (searchInput) => {
-  throw new Error("Not Implemented!"); // replace with implementation
+  if(R.isEmpty(searchInput) || R.isNil(searchInput)) {
+    return [];
+  }
+  return R.filter((country) => {
+    // I kept the case search since this would allow for weeding out of messy objects
+    // without them choking the regex match
+    if(searchInput instanceof RegExp) {
+      return country.name.match(searchInput) || country.code.match(searchInput);
+    }
+    return country.name.includes(searchInput) || country.code.includes(searchInput)
+  } , countries);
 };

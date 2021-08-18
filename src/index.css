@@ -28,13 +28,23 @@ body {
   margin: 4px;
 }
 
+.vertical-results {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  margin: 4px;
+}
+
 .results {
-  width: 300px;
+  display: flex;
   padding: 4px;
   margin: 4px;
 }
 
 .result {
+  display: inherit;
+  width: 300px;
+  justify-content: space-between;
   background: #ccc;
   padding: 4px;
   margin: 8px;
