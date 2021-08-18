@@ -33,7 +33,9 @@ export const Search = ({ orientation = ORIENTATION.VERTICAL }) => {
     <>
     <div className="search">
       <label id="searchLabel">Country Search</label>
-       <DebounceInput
+      <DebounceInput
+        aria-labelledby="searchLabel" 
+        name="searchInput" 
         minLength={1}
         debounceTimeout={300}
         onChange={event => setInput(event.target.value)} />
@@ -58,7 +60,7 @@ export const ORIENTATION = {
 //
 const Result = ({ data }) => {
   return (
-    <div className="result" key={data.code}>
+    <div data-testid="country-result" className="result" key={data.code}>
       <span className="resultName">{data.name}</span>
       <span className="resultCode">{data.code}</span>
     </div>
@@ -67,7 +69,7 @@ const Result = ({ data }) => {
 
 const ResultList = ({ resultData = [], orientation }) => {
   const display = (orientation === ORIENTATION.VERTICAL) ? 'vertical-results' : 'results';
-  return <div className={display}>
+  return <div data-testid='results-list' className={display}>
     { R.map((country) => <Result key={country.code} data={country}/>, resultData)}
     </div>;
 };
